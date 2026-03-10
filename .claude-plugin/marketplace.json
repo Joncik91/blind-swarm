@@ -1,0 +1,18 @@
+{
+  "name": "blind-swarm-marketplace",
+  "metadata": {
+    "version": "0.1.0",
+    "description": "Blind Swarm — Emergent idea generation through independent AI agent collisions"
+  },
+  "owner": {
+    "name": "BlindSwarm"
+  },
+  "plugins": [
+    {
+      "name": "blind-swarm",
+      "description": "Independent AI agents collide randomly to produce emergent ideas no single agent would generate.",
+      "version": "0.1.0",
+      "source": "./"
+    }
+  ]
+}

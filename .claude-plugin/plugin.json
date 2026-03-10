@@ -1,0 +1,10 @@
+{
+  "name": "blind-swarm",
+  "version": "0.1.0",
+  "description": "Blind Swarm — Emergent idea generation through independent AI agent collisions",
+  "author": {
+    "name": "BlindSwarm"
+  },
+  "keywords": ["swarm", "agents", "ideation", "emergence", "creativity"],
+  "license": "MIT"
+}
