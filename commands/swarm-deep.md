@@ -39,7 +39,54 @@ an expert who just realized they know nothing, an optimist delivering bad news, 
 
 Take the user's seed text: `$ARGUMENTS`
 
-Split it into **16 fragments**. Each fragment should be 1-2 sentences or even single concepts/phrases. If the seed is short, repeat fragmentation with different overlapping slices and inject 3-4 "wild fragments" — random concepts NOT in the seed at all (pull from current events, science, philosophy, nature). This injects external DNA into the swarm.
+Split it into **12 seed fragments** + **4 wild fragments** (16 total). Each fragment should be 1-2 sentences or even single concepts/phrases. If the seed is short, repeat fragmentation with different overlapping slices.
+
+#### Wild Fragment Generation (ENTROPY-SEEDED)
+
+**Do NOT invent wild fragments from your own imagination.** LLMs have favorite metaphors and will repeat them across runs. Instead:
+
+1. Run this bash command to generate 4 entropy seeds:
+
+```bash
+python3 -c "
+import random
+domains = [
+    'kitchen tools', 'marine biology', 'medieval trades', 'particle physics',
+    'folk instruments', 'extinct animals', 'surgical procedures', 'board games',
+    'textile techniques', 'volcanic phenomena', 'postal systems', 'fermentation',
+    'cartography terms', 'circus arts', 'mining equipment', 'dance forms',
+    'architectural failures', 'weather anomalies', 'prison slang', 'perfumery',
+    'radio frequencies', 'knot types', 'gambling mathematics', 'sleep disorders',
+    'typeface anatomy', 'beekeeping crises', 'elevator mechanics', 'tea ceremonies',
+    'cryptographic attacks', 'bird migration errors', 'paint chemistry', 'debt instruments',
+    'tidal patterns', 'competitive eating', 'bell casting', 'moss ecology',
+    'freight logistics', 'optical illusions', 'shoe construction', 'sourdough failures',
+    'bridge collapses', 'insect mimicry', 'calendar reform', 'tattoo removal',
+    'satellite decay', 'cheese aging', 'wildfire behavior', 'fountain pen inks',
+    'submarine acoustics', 'seed dormancy', 'roller coaster physics', 'language death'
+]
+picks = random.sample(domains, 4)
+years = [random.randint(800, 2024) for _ in range(4)]
+for p, y in zip(picks, years):
+    print(f'{p} | {y}')
+" 2>/dev/null || node -e "
+const d=['kitchen tools','marine biology','medieval trades','particle physics','folk instruments','extinct animals','surgical procedures','board games','textile techniques','volcanic phenomena','postal systems','fermentation','cartography terms','circus arts','mining equipment','dance forms','architectural failures','weather anomalies','prison slang','perfumery','radio frequencies','knot types','gambling mathematics','sleep disorders','typeface anatomy','beekeeping crises','elevator mechanics','tea ceremonies','cryptographic attacks','bird migration errors','paint chemistry','debt instruments','tidal patterns','competitive eating','bell casting','moss ecology','freight logistics','optical illusions','shoe construction','sourdough failures','bridge collapses','insect mimicry','calendar reform','tattoo removal','satellite decay','cheese aging','wildfire behavior','fountain pen inks','submarine acoustics','seed dormancy','roller coaster physics','language death'];
+const s=d.sort(()=>Math.random()-.5).slice(0,4);
+s.forEach(p=>console.log(p+' | '+(800+Math.floor(Math.random()*1224))));
+"
+```
+
+2. For each entropy seed line, spawn a subagent to generate ONE wild fragment:
+
+```
+Generate a single provocative, hyper-specific wild fragment (one sentence) inspired by: "{entropy_seed}"
+
+The fragment must be a concrete, surprising fact or metaphor from this domain. Include a specific number, name, or place. Do NOT use concepts from the user's seed text. Do NOT mention AI, technology, mycelium, cathedrals, or mirrors.
+```
+
+3. Label these F13-F16 and mark as WILD in your fragment table.
+
+This is like a noise seed in image generation — it forces every run to produce genuinely different wild DNA, preventing the LLM from recycling favorite metaphors.
 
 ### Step 2: Round 0 - Spawn 16 agents
 
@@ -129,6 +176,6 @@ Format it richly. Deep mode is the full experience — the user should see the e
 - Total agent calls: 16 + 8 + 4 + 2 + 1 = 31 agents. This is expensive. Warn the user.
 - Batch parallel calls in groups of 8 max to avoid rate limits.
 - Keep each agent output to ~150 words to control costs.
-- The wild fragments in Step 1 are critical — they inject randomness the seed can't provide.
+- Wild fragments MUST be entropy-seeded via the bash command. Never invent them from LLM imagination — this prevents the same metaphors (mycelium, cathedrals, mirrors) from appearing every run.
 - DO NOT optimize pairings. Random shuffle only.
 - Deep mode takes time. Set expectations with the user upfront.
