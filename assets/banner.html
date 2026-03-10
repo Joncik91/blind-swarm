@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1280px; height: 640px; overflow: hidden; }
+  .banner {
+    position: relative;
+    width: 1280px;
+    height: 640px;
+    background: radial-gradient(ellipse 140% 140% at 50% 50%, #1a1036 0%, #0a0a12 80%);
+    overflow: hidden;
+  }
+  .glow {
+    position: absolute;
+    border-radius: 50%;
+  }
+  .glow1 { left:200px; top:150px; width:400px; height:400px; background: radial-gradient(circle, #6366F130 0%, #6366F100 100%); }
+  .glow2 { left:700px; top:100px; width:350px; height:350px; background: radial-gradient(circle, #32D58325 0%, #32D58300 100%); }
+  .glow3 { left:500px; top:300px; width:300px; height:300px; background: radial-gradient(circle, #E85A4F20 0%, #E85A4F00 100%); }
+  .dot {
+    position: absolute;
+    border-radius: 50%;
+  }
+  .line {
+    position: absolute;
+    height: 1px;
+    transform-origin: left center;
+  }
+  .center-content {
+    position: absolute;
+    left: 354px;
+    top: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .emoji { font-size: 48px; }
+  .title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 64px;
+    font-weight: 700;
+    color: #FAFAF9;
+    letter-spacing: -2px;
+  }
+  .subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    color: #6B6B70;
+    letter-spacing: 0.5px;
+  }
+  .tag-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .tag {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .tag-indigo { background: #6366F120; color: #6366F1; }
+  .tag-green { background: #32D58320; color: #32D583; }
+  .tag-coral { background: #E85A4F20; color: #E85A4F; }
+  .tag-amber { background: #FFB54720; color: #FFB547; }
+  .cmd-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 10px;
+    background: #FFFFFF08;
+    border: 1px solid #FFFFFF15;
+  }
+  .cmd-prompt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: #6366F1;
+  }
+  .cmd-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    color: #FAFAF980;
+  }
+  .badge {
+    position: absolute;
+    left: 528px;
+    top: 490px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: #FFFFFF08;
+    border: 1px solid #FFFFFF10;
+  }
+  .badge-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #6B6B70;
+  }
+  .badge-dot {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: #4A4A50;
+  }
+  .badge-ver {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: #4A4A50;
+  }
+  .bottom-text {
+    position: absolute;
+    left: 452px;
+    top: 550px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-style: italic;
+    color: #4A4A50;
+  }
+  svg.lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1280px;
+    height: 640px;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="banner">
+  <div class="glow glow1"></div>
+  <div class="glow glow2"></div>
+  <div class="glow glow3"></div>
+
+  <svg class="lines" viewBox="0 0 1280 640">
+    <line x1="185" y1="205" x2="355" y2="205" stroke="#6366F130" stroke-width="1"/>
+    <line x1="354" y1="124" x2="524" y2="284" stroke="#32D58320" stroke-width="1"/>
+    <line x1="526" y1="286" x2="754" y2="286" stroke="#E85A4F20" stroke-width="1"/>
+    <line x1="755" y1="185" x2="905" y2="355" stroke="#FFB54720" stroke-width="1"/>
+    <line x1="906" y1="356" x2="1106" y2="406" stroke="#6366F120" stroke-width="1"/>
+    <line x1="185" y1="205" x2="525" y2="285" stroke="#6366F115" stroke-width="1" stroke-dasharray="4 8"/>
+    <line x1="655" y1="455" x2="835" y2="435" stroke="#E85A4F15" stroke-width="1" stroke-dasharray="4 8"/>
+    <line x1="285" y1="405" x2="655" y2="455" stroke="#FFB54715" stroke-width="1" stroke-dasharray="4 8"/>
+  </svg>
+
+  <div class="dot" style="left:180px;top:200px;width:10px;height:10px;background:#6366F1;opacity:0.8"></div>
+  <div class="dot" style="left:350px;top:120px;width:8px;height:8px;background:#32D583;opacity:0.7"></div>
+  <div class="dot" style="left:520px;top:280px;width:12px;height:12px;background:#E85A4F;opacity:0.8"></div>
+  <div class="dot" style="left:750px;top:180px;width:9px;height:9px;background:#FFB547;opacity:0.7"></div>
+  <div class="dot" style="left:900px;top:350px;width:11px;height:11px;background:#6366F1;opacity:0.6"></div>
+  <div class="dot" style="left:1050px;top:200px;width:8px;height:8px;background:#32D583;opacity:0.8"></div>
+  <div class="dot" style="left:280px;top:400px;width:10px;height:10px;background:#FFB547;opacity:0.6"></div>
+  <div class="dot" style="left:650px;top:450px;width:7px;height:7px;background:#E85A4F;opacity:0.7"></div>
+  <div class="dot" style="left:1100px;top:400px;width:10px;height:10px;background:#6366F1;opacity:0.7"></div>
+  <div class="dot" style="left:430px;top:150px;width:6px;height:6px;background:#32D583;opacity:0.5"></div>
+  <div class="dot" style="left:830px;top:430px;width:8px;height:8px;background:#FFB547;opacity:0.8"></div>
+  <div class="dot" style="left:150px;top:350px;width:9px;height:9px;background:#E85A4F;opacity:0.5"></div>
+
+  <div class="center-content">
+    <div class="title-row">
+      <span class="emoji">🐝</span>
+      <span class="title">blind swarm</span>
+      <span class="emoji">🐝</span>
+    </div>
+    <div class="subtitle">ideas your AI would never suggest alone</div>
+    <div class="tag-row">
+      <span class="tag tag-indigo">16 blind agents</span>
+      <span class="tag tag-green">random collisions</span>
+      <span class="tag tag-coral">emergent ideas</span>
+      <span class="tag tag-amber">zero orchestration</span>
+    </div>
+    <div class="cmd-line">
+      <span class="cmd-prompt">&gt;</span>
+      <span class="cmd-text">/swarm-deep "what should I build next?"</span>
+    </div>
+  </div>
+
+  <div class="badge">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B6B70" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+    <span class="badge-text">Claude Code Plugin</span>
+    <span class="badge-dot">·</span>
+    <span class="badge-ver">v0.1.0</span>
+  </div>
+
+  <div class="bottom-text">because AI asking AI produces the same ideas every time</div>
+</div>
+</body>
+</html>
