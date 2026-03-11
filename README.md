@@ -95,6 +95,27 @@ Scores on **Weirdness** as a bonus metric. Shows the full evolutionary tree.
 /swarm-deep the future of human-AI interaction
 ```
 
+### `/swarm-acre <seed>` — ACRE-8
+
+**Adversarial Concept Resurrection Engine.** Everything in deep mode, plus rejection tracking.
+
+Every collision kills ideas — two inputs go in, one synthesis comes out, and concepts get dropped on the floor. Normally they're gone forever. ACRE-8 catches them.
+
+After each round, **extraction agents** dissect what was lost. Then **scan agents** watch for resurrections — when a killed idea independently resurfaces in a completely separate collision path. That's a **deep graft**: an idea the swarm tried to kill but couldn't.
+
+Deep grafts get re-injected into later rounds with a tag: *"This survived rejection. Take it seriously."*
+
+~45 agent calls. The most expensive mode. Also the most revealing.
+
+```
+/swarm-acre why do startups keep building the same thing
+```
+
+**What you get that other modes don't:**
+- **Deep Graft Report** — every idea that survived rejection, with full lineage
+- **Rejection Graveyard** — what died and stayed dead (also useful — tells you what the problem space doesn't need)
+- **The Unkillable Idea** — if any concept was resurrected 2+ times, it gets a special callout. The swarm tried to kill it and failed. That's your best idea.
+
 ## Why this exists
 
 We had a 2-hour conversation with Claude about what to build. Every idea was predictable. We could literally predict what Claude would suggest before it said it.
@@ -113,7 +134,7 @@ The answer is this plugin. Agents that are deliberately kept blind, collided ran
 
 ## Fair warning
 
-- `/swarm-deep` spawns 31 agents. It takes a few minutes and uses real tokens.
+- `/swarm-acre` spawns ~45 agents. `/swarm-deep` spawns 31. They take a few minutes and use real tokens.
 - Results range from "genuinely brilliant" to "beautiful nonsense." That's the point.
 - You might get an idea so weird it circles back to genius. Or it might just be weird.
 - Either way, you won't get "have you considered a micro-SaaS for freelancers?"
