@@ -45,15 +45,23 @@ an expert who just realized they know nothing, an optimist delivering bad news, 
 
 Take the user's seed text: `$ARGUMENTS`
 
-Split it into **12 seed fragments** + **4 wild fragments** (16 total). Each fragment should be 1-2 sentences or even single concepts/phrases. If the seed is short, repeat fragmentation with different overlapping slices.
+Split it into **10 seed fragments** + **6 wild fragments** (16 total). Each fragment should be 1-2 sentences or even single concepts/phrases. If the seed is short, repeat fragmentation with different overlapping slices.
 
-#### Wild Fragment Generation (ENTROPY-SEEDED)
+#### Wild Fragment Generation (MAXIMUM ENTROPY)
 
-**Do NOT invent wild fragments from your own imagination.** Use entropy seeds:
+**Do NOT invent wild fragments from your own imagination.** LLMs have favorite metaphors and will repeat them across runs. Wild fragments must be seeded with external entropy — and maximally so.
+
+Each wild fragment is generated from a **cross-domain collision**: two random domains forced together, plus a random year, a random geographic anchor, and a random constraint modifier. This produces combinations no LLM would ever default to.
+
+Run this bash command to generate 6 entropy seeds:
 
 ```bash
 python3 -c "
-import random
+import random, os
+
+# Use system entropy for seeding
+random.seed(int.from_bytes(os.urandom(16), 'big'))
+
 domains = [
     'kitchen tools', 'marine biology', 'medieval trades', 'particle physics',
     'folk instruments', 'extinct animals', 'surgical procedures', 'board games',
@@ -67,28 +75,82 @@ domains = [
     'freight logistics', 'optical illusions', 'shoe construction', 'sourdough failures',
     'bridge collapses', 'insect mimicry', 'calendar reform', 'tattoo removal',
     'satellite decay', 'cheese aging', 'wildfire behavior', 'fountain pen inks',
-    'submarine acoustics', 'seed dormancy', 'roller coaster physics', 'language death'
+    'submarine acoustics', 'seed dormancy', 'roller coaster physics', 'language death',
+    'embalming chemistry', 'lock picking', 'coral spawning', 'trebuchet mechanics',
+    'paper marbling', 'ice core dating', 'sword tempering', 'pigeon racing',
+    'silk degumming', 'controlled demolition', 'sake brewing', 'falconry jargon',
+    'glass blowing defects', 'mushroom spore dispersal', 'rope splicing', 'tide mill operation',
+    'bone setting', 'clay pipe manufacture', 'fog harvesting', 'whale fall ecology',
+    'thatch roofing', 'compass deviation', 'lace bobbin turning', 'peat cutting',
+    'kiln drying failures', 'anchor dragging', 'candle clock calibration', 'leech therapy',
+    'grain elevator explosions', 'pearl cultivation errors', 'chimney swift migration',
+    'vinegar fermentation accidents', 'hot air balloon envelope repair', 'oyster reef restoration',
+    'hand bell ringing patterns', 'wool carding', 'quicksand mechanics', 'bat echolocation jamming',
+    'salt mine collapses', 'coconut coir processing', 'auroral sound phenomena',
+    'bookbinding adhesive failure', 'termite mound ventilation', 'horse collar evolution',
+    'magnet fishing finds', 'obsidian knapping', 'plague doctor equipment', 'rainwater harvesting failures',
+    'saffron adulteration', 'shipworm damage patterns', 'smoke signal encoding',
+    'spider silk harvesting', 'steam hammer calibration', 'stone wall dry stacking',
+    'sunflower heliotropism', 'tar distillation', 'tuning fork acoustics', 'umbrella frame mechanics',
+    'vellum preparation', 'water divining', 'wax seal forensics', 'yeast mutation'
 ]
-picks = random.sample(domains, 4)
-years = [random.randint(800, 2024) for _ in range(4)]
-for p, y in zip(picks, years):
-    print(f'{p} | {y}')
+
+modifiers = [
+    'a failure in', 'the opposite of', 'the last known', 'the accidental discovery of',
+    'the forbidden practice of', 'the sound of', 'the smell of', 'what happens after',
+    'the moment before', 'the wrong way to', 'the oldest surviving', 'the smallest',
+    'the heaviest', 'a counterfeit', 'a abandoned', 'the night shift of',
+    'the illegal version of', 'the children\\'s version of', 'the underwater variant of',
+    'the wartime substitute for', 'the blind version of', 'the silent form of',
+    'the poisonous cousin of', 'the fossilized remains of', 'the amateur mistake in'
+]
+
+places = [
+    'Osaka', 'Reykjavik', 'Mombasa', 'Ulaanbaatar', 'Valparaíso', 'Bruges',
+    'Tbilisi', 'Manaus', 'Tromsø', 'Jaipur', 'Antananarivo', 'Sarajevo',
+    'Cusco', 'Zanzibar', 'Yakutsk', 'Oaxaca', 'Tallinn', 'Bhutan',
+    'Svalbard', 'Aleppo', 'Palermo', 'Irkutsk', 'Fez', 'Hanoi',
+    'Lhasa', 'Dakar', 'Ushuaia', 'Tashkent', 'Split', 'Luang Prabang',
+    'Baku', 'Arequipa', 'Windhoek', 'Plovdiv', 'Gyeongju', 'Matera',
+    'Kairouan', 'Potosí', 'Bukhara', 'Nara'
+]
+
+# Pick 12 domains (6 pairs), 6 modifiers, 6 places, 6 years
+picks = random.sample(domains, 12)
+mods = random.sample(modifiers, 6)
+locs = random.sample(places, 6)
+years = [random.randint(800, 2024) for _ in range(6)]
+
+for i in range(6):
+    print(f'{mods[i]} {picks[i*2]} × {picks[i*2+1]} | {locs[i]} | {years[i]}')
 " 2>/dev/null || node -e "
-const d=['kitchen tools','marine biology','medieval trades','particle physics','folk instruments','extinct animals','surgical procedures','board games','textile techniques','volcanic phenomena','postal systems','fermentation','cartography terms','circus arts','mining equipment','dance forms','architectural failures','weather anomalies','prison slang','perfumery','radio frequencies','knot types','gambling mathematics','sleep disorders','typeface anatomy','beekeeping crises','elevator mechanics','tea ceremonies','cryptographic attacks','bird migration errors','paint chemistry','debt instruments','tidal patterns','competitive eating','bell casting','moss ecology','freight logistics','optical illusions','shoe construction','sourdough failures','bridge collapses','insect mimicry','calendar reform','tattoo removal','satellite decay','cheese aging','wildfire behavior','fountain pen inks','submarine acoustics','seed dormancy','roller coaster physics','language death'];
-const s=d.sort(()=>Math.random()-.5).slice(0,4);
-s.forEach(p=>console.log(p+' | '+(800+Math.floor(Math.random()*1224))));
+const crypto=require('crypto');
+const d=['kitchen tools','marine biology','medieval trades','particle physics','folk instruments','extinct animals','surgical procedures','board games','textile techniques','volcanic phenomena','postal systems','fermentation','cartography terms','circus arts','mining equipment','dance forms','architectural failures','weather anomalies','prison slang','perfumery','radio frequencies','knot types','gambling mathematics','sleep disorders','typeface anatomy','beekeeping crises','elevator mechanics','tea ceremonies','cryptographic attacks','bird migration errors','paint chemistry','debt instruments','tidal patterns','competitive eating','bell casting','moss ecology','freight logistics','optical illusions','shoe construction','sourdough failures','bridge collapses','insect mimicry','calendar reform','tattoo removal','satellite decay','cheese aging','wildfire behavior','fountain pen inks','submarine acoustics','seed dormancy','roller coaster physics','language death','embalming chemistry','lock picking','coral spawning','trebuchet mechanics','paper marbling','ice core dating','sword tempering','pigeon racing','silk degumming','controlled demolition','sake brewing','falconry jargon','glass blowing defects','mushroom spore dispersal','rope splicing','tide mill operation','bone setting','clay pipe manufacture','fog harvesting','whale fall ecology','thatch roofing','compass deviation','lace bobbin turning','peat cutting','kiln drying failures','anchor dragging','candle clock calibration','leech therapy','grain elevator explosions','pearl cultivation errors','chimney swift migration','vinegar fermentation accidents','hot air balloon envelope repair','oyster reef restoration','hand bell ringing patterns','wool carding','quicksand mechanics','bat echolocation jamming','salt mine collapses','coconut coir processing','auroral sound phenomena','bookbinding adhesive failure','termite mound ventilation','horse collar evolution','magnet fishing finds','obsidian knapping','plague doctor equipment','rainwater harvesting failures','saffron adulteration','shipworm damage patterns','smoke signal encoding','spider silk harvesting','steam hammer calibration','stone wall dry stacking','sunflower heliotropism','tar distillation','tuning fork acoustics','umbrella frame mechanics','vellum preparation','water divining','wax seal forensics','yeast mutation'];
+const m=['a failure in','the opposite of','the last known','the accidental discovery of','the forbidden practice of','the sound of','the smell of','what happens after','the moment before','the wrong way to','the oldest surviving','the smallest','the heaviest','a counterfeit','a abandoned','the night shift of','the illegal version of','the children\\'s version of','the underwater variant of','the wartime substitute for','the blind version of','the silent form of','the poisonous cousin of','the fossilized remains of','the amateur mistake in'];
+const p=['Osaka','Reykjavik','Mombasa','Ulaanbaatar','Valparaíso','Bruges','Tbilisi','Manaus','Tromsø','Jaipur','Antananarivo','Sarajevo','Cusco','Zanzibar','Yakutsk','Oaxaca','Tallinn','Bhutan','Svalbard','Aleppo','Palermo','Irkutsk','Fez','Hanoi','Lhasa','Dakar','Ushuaia','Tashkent','Split','Luang Prabang','Baku','Arequipa','Windhoek','Plovdiv','Gyeongju','Matera','Kairouan','Potosí','Bukhara','Nara'];
+function sh(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=crypto.randomInt(i+1);[b[i],b[j]]=[b[j],b[i]];}return b;}
+const ds=sh(d).slice(0,12),ms=sh(m).slice(0,6),ps=sh(p).slice(0,6);
+for(let i=0;i<6;i++)console.log(ms[i]+' '+ds[i*2]+' × '+ds[i*2+1]+' | '+ps[i]+' | '+(800+crypto.randomInt(1224)));
 "
 ```
+
+Each line is a **cross-domain entropy seed** with 5 randomized axes:
+- **Modifier** — constrains the angle of approach (25 options)
+- **Domain A × Domain B** — two unrelated fields forced into collision (100+ domains)
+- **Place** — geographic anchor prevents generic framing (40 cities across 6 continents)
+- **Year** — temporal anchor (800-2024)
+
+Example output: `the forbidden practice of bell casting × bat echolocation jamming | Potosí | 1347`
 
 For each entropy seed, spawn a subagent:
 
 ```
-Generate a single provocative, hyper-specific wild fragment (one sentence) inspired by: "{entropy_seed}"
+Generate a single provocative, hyper-specific wild fragment (one sentence) inspired by this entropy seed: "{entropy_seed}"
 
-The fragment must be a concrete, surprising fact or metaphor from this domain. Include a specific number, name, or place. Do NOT use concepts from the user's seed text. Do NOT mention AI, technology, mycelium, cathedrals, or mirrors.
+The fragment must collide BOTH domains through the modifier's lens, anchored in the specific place and era. It must be a concrete, surprising fact or metaphor — not abstract. Include a specific number, name, or measurement. Do NOT use concepts from the user's seed text. Do NOT mention AI, technology, mycelium, cathedrals, or mirrors. The weirder and more specific, the better.
 ```
 
-Label wild fragments F13-F16 and mark as WILD.
+Label wild fragments F11-F16 and mark as WILD.
 
 ### Step 2: Initialize the Rejection Buffer
 
