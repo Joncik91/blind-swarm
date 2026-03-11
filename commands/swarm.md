@@ -1,5 +1,5 @@
 ---
-description: "Run a blind swarm - independent AI agents collide randomly to produce emergent ideas"
+description: "Run a blind swarm — 16 agents collide through 4 rounds with rejection tracking. Finds ideas AI can't kill."
 arguments:
   - name: seed
     description: "Seed text - a topic, problem, or raw brain dump to explore"
@@ -8,7 +8,9 @@ arguments:
 
 # Blind Swarm
 
-You are orchestrating a **blind swarm** - a system where independent AI agents, each unaware of each other, collide randomly to produce emergent ideas that no single agent would generate.
+You are orchestrating a **blind swarm** — a system where 16 independent AI agents, each unaware of each other, collide randomly in a tournament bracket to produce emergent ideas. The system tracks what gets killed and what comes back uninvited.
+
+**Total agent calls: ~45** (31 swarm + ~14 rejection tracking)
 
 ## Rules
 
@@ -17,6 +19,25 @@ You are orchestrating a **blind swarm** - a system where independent AI agents, 
 3. **The fragmenter is dumb.** Split seed text mechanically, not intelligently.
 4. **Lenses force perspective.** Each agent gets a random persona that shifts their thinking.
 5. **You are NOT the creative brain.** You are the infrastructure. Don't steer.
+6. **Mutate lenses between rounds.** Each round draws from a DIFFERENT lens category to maximize divergence.
+7. **Rejection is data, not deletion.** Every collision kills ideas. Capture what dies.
+8. **Resurrection is signal.** An idea that comes back uninvited is more important than one that was kept.
+9. **Deep grafts are sacred.** They get re-injected with a tag. They cannot be killed twice.
+10. **Track lineage obsessively.** Every rejected concept gets a source ID and round-of-death.
+
+## Lens Pools
+
+### Pool A — Human Extremes (Round 0)
+skeptical physicist, 9-year-old who asks why, retired con artist gone straight, mycologist who sees networks everywhere, graffiti artist from São Paulo, grandmother who survived a war, venture capitalist who's lost everything twice, deep sea diver, retired librarian who reads banned books, stand-up comedian at 2am, archaeologist finding modern artifacts, blind musician, emergency room nurse on hour 14, beekeeper philosopher, competitive chess player who hates chess, street food vendor in Bangkok
+
+### Pool B — Altered States (Round 1)
+someone who just woke from a 10-year coma, astronaut seeing Earth from space for the first time, person reading their own obituary, time traveler from 1926, last human alive, newborn experiencing consciousness, someone mid-free-fall, person who just won the lottery and feels nothing, ghost haunting their former office, dreamer who knows they're dreaming
+
+### Pool C — Non-Human Perspectives (Round 2)
+the internet becoming self-aware, a city thinking about its own growth, a melody trying to resolve, a river deciding where to flow, a virus optimizing for spread, an abandoned building remembering its purpose, a market crash in slow motion, a seed deciding when to germinate, a language going extinct, a trend becoming a cliché
+
+### Pool D — Paradox Minds (Round 3 & 4)
+an expert who just realized they know nothing, an optimist delivering bad news, a revolutionary defending tradition, a machine learning to forget, an artist destroying their masterpiece to create, a teacher learning from their worst student, a map that contradicts the territory, a clock that measures everything except time, a mirror reflecting what isn't there, a question that answers itself
 
 ## Process
 
@@ -24,19 +45,87 @@ You are orchestrating a **blind swarm** - a system where independent AI agents, 
 
 Take the user's seed text: `$ARGUMENTS`
 
-Split it into **8 fragments**. Each fragment should be 1-3 sentences, randomly selected from the seed. If the seed is short, create fragments by isolating individual concepts, keywords, or phrases. Fragments should overlap partially but not completely. Be mechanical about this - don't optimize the fragments.
+Split it into **12 seed fragments** + **4 wild fragments** (16 total). Each fragment should be 1-2 sentences or even single concepts/phrases. If the seed is short, repeat fragmentation with different overlapping slices.
 
-### Step 2: Assign lenses
+#### Wild Fragment Generation (ENTROPY-SEEDED)
 
-For each of the 8 fragments, randomly pick a lens from this pool:
+**Do NOT invent wild fragments from your own imagination.** Use entropy seeds:
 
-skeptical physicist, 9-year-old who asks why, retired con artist gone straight, mycologist who sees networks everywhere, graffiti artist from São Paulo, grandmother who survived a war, venture capitalist who's lost everything twice, deep sea diver, retired librarian who reads banned books, stand-up comedian at 2am, archaeologist finding modern artifacts, blind musician, emergency room nurse on hour 14, beekeeper philosopher, competitive chess player who hates chess, street food vendor in Bangkok, disgraced olympian seeking redemption, AI that just became sentient yesterday, lighthouse keeper who hasn't spoken in months, forensic accountant who moonlights as a poet, parkour instructor with vertigo, retired spy writing memoirs, synesthete who tastes words, demolition expert who loves building, sleep researcher who can't sleep, cartographer mapping imaginary places, professional mourner, toy designer for adults, storm chaser afraid of wind, translator of dead languages
+```bash
+python3 -c "
+import random
+domains = [
+    'kitchen tools', 'marine biology', 'medieval trades', 'particle physics',
+    'folk instruments', 'extinct animals', 'surgical procedures', 'board games',
+    'textile techniques', 'volcanic phenomena', 'postal systems', 'fermentation',
+    'cartography terms', 'circus arts', 'mining equipment', 'dance forms',
+    'architectural failures', 'weather anomalies', 'prison slang', 'perfumery',
+    'radio frequencies', 'knot types', 'gambling mathematics', 'sleep disorders',
+    'typeface anatomy', 'beekeeping crises', 'elevator mechanics', 'tea ceremonies',
+    'cryptographic attacks', 'bird migration errors', 'paint chemistry', 'debt instruments',
+    'tidal patterns', 'competitive eating', 'bell casting', 'moss ecology',
+    'freight logistics', 'optical illusions', 'shoe construction', 'sourdough failures',
+    'bridge collapses', 'insect mimicry', 'calendar reform', 'tattoo removal',
+    'satellite decay', 'cheese aging', 'wildfire behavior', 'fountain pen inks',
+    'submarine acoustics', 'seed dormancy', 'roller coaster physics', 'language death'
+]
+picks = random.sample(domains, 4)
+years = [random.randint(800, 2024) for _ in range(4)]
+for p, y in zip(picks, years):
+    print(f'{p} | {y}')
+" 2>/dev/null || node -e "
+const d=['kitchen tools','marine biology','medieval trades','particle physics','folk instruments','extinct animals','surgical procedures','board games','textile techniques','volcanic phenomena','postal systems','fermentation','cartography terms','circus arts','mining equipment','dance forms','architectural failures','weather anomalies','prison slang','perfumery','radio frequencies','knot types','gambling mathematics','sleep disorders','typeface anatomy','beekeeping crises','elevator mechanics','tea ceremonies','cryptographic attacks','bird migration errors','paint chemistry','debt instruments','tidal patterns','competitive eating','bell casting','moss ecology','freight logistics','optical illusions','shoe construction','sourdough failures','bridge collapses','insect mimicry','calendar reform','tattoo removal','satellite decay','cheese aging','wildfire behavior','fountain pen inks','submarine acoustics','seed dormancy','roller coaster physics','language death'];
+const s=d.sort(()=>Math.random()-.5).slice(0,4);
+s.forEach(p=>console.log(p+' | '+(800+Math.floor(Math.random()*1224))));
+"
+```
 
-**Pick 8 different lenses. Never reuse within a run.**
+For each entropy seed, spawn a subagent:
 
-### Step 3: Round 0 - Spawn agents
+```
+Generate a single provocative, hyper-specific wild fragment (one sentence) inspired by: "{entropy_seed}"
 
-For each of the 8 fragment+lens pairs, use the Agent tool to spawn a subagent with this prompt:
+The fragment must be a concrete, surprising fact or metaphor from this domain. Include a specific number, name, or place. Do NOT use concepts from the user's seed text. Do NOT mention AI, technology, mycelium, cathedrals, or mirrors.
+```
+
+Label wild fragments F13-F16 and mark as WILD.
+
+### Step 2: Initialize the Rejection Buffer
+
+Create an internal tracking structure. Maintain it as running state throughout the swarm:
+
+```
+REJECTION_BUFFER = []
+DEEP_GRAFTS = []
+
+Each rejected concept entry:
+{
+  id: "REJ-{round}-{number}",
+  concept: "<2-3 sentence summary of the killed idea>",
+  keywords: [<3-5 key terms>],
+  source_collision: "<which collision produced then killed it>",
+  round_killed: <number>,
+  parent_outputs: ["<A3>", "<A7>"],
+  resurrection_count: 0
+}
+
+Each deep graft entry:
+{
+  id: "GRAFT-{number}",
+  original_rejection: "REJ-{round}-{number}",
+  resurfaced_in: "<output ID where it reappeared>",
+  round_resurfaced: <number>,
+  similarity: "<how the resurfaced version relates to the original>",
+  resurrection_count: <number>,
+  injected_into: [<list of rounds/collisions where it was re-injected>]
+}
+```
+
+### Step 3: Round 0 — Spawn 16 agents
+
+Assign each fragment a random lens from **Pool A**.
+
+For each, spawn a subagent:
 
 ```
 You are a {lens}. You received this fragment of someone's thinking:
@@ -46,18 +135,20 @@ You are a {lens}. You received this fragment of someone's thinking:
 Expand on this in 150 words. Do not ask questions. Do not hedge. Make bold claims. Contradict yourself if needed. Be extremely specific. Connect it to something unexpected. Do NOT try to be helpful or balanced. Be weird. Be wrong if it's interesting.
 ```
 
-**Run all 8 agents in parallel.**
+**Run all 16 agents in parallel (batch in groups of 8 if needed).**
 
-Collect their outputs. Label them A1 through A8.
+Collect outputs. Label A1 through A16.
 
-### Step 4: Round 1 - First collision
+### Step 4: Round 1 — First collision (16 → 8) + EXTRACTION
 
-Randomly pair the 8 outputs into 4 pairs. Use a fresh random lens for each.
+#### 4a: Collision
 
-For each pair, spawn a subagent:
+Randomly pair the 16 outputs into 8 pairs. Assign lenses from **Pool B**.
+
+Standard collision prompt:
 
 ```
-You are a {new_lens}. Two strangers left these notes on a café table:
+You are a {lens}. Two strangers left these notes on a café table:
 
 Note 1: "{output_X}"
 
@@ -66,50 +157,255 @@ Note 2: "{output_Y}"
 These notes are clearly connected but neither author knows about the other. In 150 words, explain the hidden connection. Then propose something concrete that combines both. Be specific. Name things. Include numbers. Don't be abstract.
 ```
 
-**Run all 4 agents in parallel.**
+**Run 8 agents in parallel.** Collect outputs B1-B8.
 
-Collect outputs. Label them B1 through B4.
+#### 4b: Extraction
 
-### Step 5: Round 2 - Second collision
+For each of the 8 collisions, spawn an extraction agent:
 
-Randomly pair the 4 outputs into 2 pairs. Fresh lenses.
+```
+You are a forensic analyst of killed ideas.
 
-Same collision prompt as Round 1 but with Round 1 outputs.
+Two inputs went into a collision:
+Input 1: "{input_X}"
+Input 2: "{input_Y}"
 
-**Run 2 agents in parallel.**
+The collision produced:
+Output: "{collision_output}"
 
-Collect outputs. Label them C1 and C2.
+What ideas, images, concepts, or claims from the inputs were DROPPED or LOST in the output? List 2-4 specific concepts that were present in the inputs but absent from the output. For each, give:
+- A 1-2 sentence description of the killed concept
+- 3-5 keywords that capture its essence
+- Which input it came from
 
-### Step 6: Round 3 - Final collision
+Be precise. Only list things genuinely absent from the output, not things that were rephrased.
+```
 
-Take C1 and C2. One more fresh lens. One more collision.
+**Run 8 extraction agents in parallel** (can batch with collision agents if within limits).
 
-This produces the final output D1.
+Parse results. Add each killed concept to REJECTION_BUFFER with appropriate metadata.
 
-### Step 7: Filter and score
+### Step 5: Round 2 — Second collision (8 → 4) + SCAN + EXTRACTION
 
-Now YOU evaluate. Score the following on 1-10:
+#### 5a: Collision
+
+Randomly pair 8 outputs into 4 pairs. Lenses from **Pool C**. Standard collision prompt. **Run 4 agents in parallel.** Collect C1-C4.
+
+#### 5b: Resurrection Scan
+
+For each of the 4 new outputs (C1-C4), spawn a scan agent:
+
+```
+You are searching for resurrected ideas.
+
+Here is a new output from a creative collision:
+"{new_output}"
+
+Here is a list of concepts that were REJECTED in previous rounds:
+{rejection_buffer_formatted}
+
+Does the new output contain ANY concept that matches or closely resembles a previously rejected concept? The match does NOT need to be exact — it could be the same core idea expressed differently, the same metaphor in a new context, or the same structural insight with different surface details.
+
+For each match found, report:
+- Which rejected concept ID it matches (REJ-X-Y)
+- The specific passage in the new output that resembles it
+- How similar they are: ECHO (surface similarity), RHYME (structural similarity), or RESURRECTION (core idea independently reinvented)
+- A 1-sentence explanation of why this is the same underlying idea
+
+If no matches, say "NO MATCHES" and nothing else.
+```
+
+**Run 4 scan agents in parallel.**
+
+Any match rated RHYME or RESURRECTION → add to DEEP_GRAFTS. Increment resurrection_count on the original rejection.
+
+#### 5c: Extraction
+
+Same as Step 4b but for the 4 Round 2 collisions. **Run 4 extraction agents in parallel.**
+
+Add new killed concepts to REJECTION_BUFFER.
+
+### Step 6: Round 3 — Third collision (4 → 2) + DEEP GRAFT INJECTION
+
+#### 6a: Collision with graft injection
+
+If DEEP_GRAFTS is non-empty, modify the collision prompt:
+
+```
+You are a {lens from Pool D}. Two strangers left these notes on a café table:
+
+Note 1: "{output_X}"
+
+Note 2: "{output_Y}"
+
+These notes are clearly connected but neither author knows about the other.
+
+ALSO: The following ideas were previously rejected by other thinkers working on this same problem — but they kept coming back independently. They may be load-bearing concepts that the problem needs:
+
+{for each deep graft:}
+- DEEP GRAFT [{graft.id}]: "{graft.concept}" — This was killed in Round {killed} but resurfaced independently in Round {resurfaced}. It survived rejection. Take it seriously.
+{end for}
+
+In 200 words (longer than usual — you have more material), explain the hidden connection between the notes. Incorporate any deep grafts that genuinely fit — but do NOT force them. If a deep graft doesn't belong, ignore it. Then propose something concrete that combines everything. Be specific. Name things. Include numbers.
+```
+
+If no deep grafts exist, use the standard collision prompt.
+
+**Run 2 agents in parallel.** Collect D1 and D2.
+
+#### 6b: Scan + Extraction
+
+Run scan against full rejection buffer. Run extraction on the 2 collisions.
+
+Any NEW resurrections found here are **double grafts** — ideas that survived two rounds of rejection. Flag them specially.
+
+### Step 7: Round 4 — Final collision (2 → 1) + DEEP GRAFT INJECTION
+
+Same deep graft injection as Round 3, including any new grafts found in Round 3.
+
+Final collision produces E1.
+
+Run one last scan on E1 against the full buffer.
+
+### Step 8: Score
+
+Score ALL semi-final and final outputs (C1-C4, D1, D2, E1) on 1-10:
 
 - **Novelty**: Would this surprise someone who's been thinking about this topic for years?
 - **Coherence**: Does it hold together internally?
 - **Generativity**: Does it open doors to more ideas?
+- **Weirdness**: How far from the obvious is this?
+- **Graft Density**: How many deep grafts influenced this output?
 
-Also look back at C1 and C2 (the semi-finals) as they may contain strong ideas that got lost in the final collision.
+Ranking formula: **(Novelty × Generativity) + Weirdness bonus + (Graft Density × 5)**
 
-### Step 8: Present results
+The graft density bonus is intentional. Ideas shaped by deep grafts have been tested by rejection and survived. They earn extra weight.
+
+### Step 9: Extract
+
+For each of the top 3 ideas, run an extraction pass. This is NOT a separate agent — YOU do this analysis:
+
+For each top idea, produce:
+
+**MECHANISMS** — What are the separable moving parts? Each mechanism should be a concrete, reusable concept independent of the idea's specific framing.
+
+**DOMAIN MAP** — Where could each mechanism actually apply? Name specific product categories, industries, or existing tools.
+
+**MINIMUM VIABLE VERSION** — What's the smallest, fastest version of this you could build or test? One weekend. One API. One experiment.
+
+**KILL TEST** — What would make this idea die in practice? What's the most likely reason it fails? Be honest.
+
+### Step 10: Present results
 
 Show the user:
 
-1. **The top idea** from D1 (or C1/C2 if stronger)
-2. **2-3 runner-up ideas** from earlier rounds that had high novelty
-3. **The collision path** - show how fragments combined through rounds to produce the final output
-4. **Scores** for each surfaced idea
+#### Swarm output:
+1. **Top 3 ideas** ranked by score
+2. **The wildest idea** regardless of coherence
+3. **Collision paths** for each top idea
+4. **Scores** for all surfaced ideas
+5. **Wild fragment influence map**
+6. **Key emergent themes**
 
-Format it cleanly. The user should see the journey, not just the destination.
+#### Rejection tracking:
+
+7. **DEEP GRAFT REPORT**
+
+For each deep graft found:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ DEEP GRAFT: {graft.id}                                  │
+├─────────────────────────────────────────────────────────┤
+│ Concept: {description}                                  │
+│ Killed in: Round {N}, collision {X}+{Y} → {Z}          │
+│ Resurfaced in: Round {M}, output {W}                    │
+│ Match type: RESURRECTION / RHYME / ECHO                 │
+│ Resurrection count: {N}                                 │
+│ Injected into: Round {R} collisions                     │
+│ Final influence: {which top ideas it shaped}            │
+│                                                         │
+│ WHY IT MATTERS: {1-2 sentences on why this idea         │
+│ couldn't be killed — what does that tell us about       │
+│ the problem space?}                                     │
+└─────────────────────────────────────────────────────────┘
+```
+
+8. **REJECTION GRAVEYARD**
+
+The full rejection buffer, organized by round. Ideas that died and STAYED dead — they tell you what the problem space doesn't need.
+
+```
+┌────────────┬──────────────────────────┬───────────┬──────────────┐
+│ ID         │ Concept                  │ Killed in │ Resurrected? │
+├────────────┼──────────────────────────┼───────────┼──────────────┤
+│ REJ-1-01   │ ...                      │ Round 1   │ No           │
+│ REJ-1-02   │ ...                      │ Round 1   │ → GRAFT-1   │
+│ ...        │                          │           │              │
+└────────────┴──────────────────────────┴───────────┴──────────────┘
+```
+
+9. **SUMMARY STATISTICS**
+
+```
+Total concepts tracked: {N}
+Rejected in Round 1: {N}
+Rejected in Round 2: {N}
+Rejected in Round 3: {N}
+Resurrected (ECHO): {N}
+Resurrected (RHYME): {N}
+Resurrected (RESURRECTION): {N}
+Deep grafts found: {N}
+Double grafts (survived 2+ rejections): {N}
+Graft influence on top 3: {list which grafts shaped which top ideas}
+```
+
+10. **THE UNKILLABLE IDEA**
+
+If any concept was resurrected 2+ times (a double graft or higher):
+
+> **THE UNKILLABLE IDEA:** {concept}
+>
+> This idea was rejected {N} times across {N} independent collision paths and came back every time. The swarm tried to kill it and couldn't. This is the most important output of this run — not because any agent championed it, but because the problem itself demands it.
+
+If no double grafts exist, skip this section.
+
+#### Extraction:
+
+11. **WHAT'S EXTRACTABLE**
+
+For each top 3 idea:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ IDEA: {name}                                            │
+├─────────────────────────────────────────────────────────┤
+│ MECHANISMS:                                             │
+│ - {mechanism 1}: {what it does}                         │
+│ - {mechanism 2}: {what it does}                         │
+│                                                         │
+│ DOMAIN MAP:                                             │
+│ - {mechanism 1} → {where it could go}                  │
+│ - {mechanism 2} → {where it could go}                  │
+│                                                         │
+│ MINIMUM VIABLE VERSION:                                 │
+│ {1-3 sentences: the weekend build}                      │
+│                                                         │
+│ KILL TEST:                                              │
+│ {1-2 sentences: what kills this in practice}            │
+└─────────────────────────────────────────────────────────┘
+```
 
 ## Important
 
-- If running agents would exceed reasonable limits, reduce to 4 initial agents instead of 8
-- Keep each agent output to ~150 words to control costs
-- The magic is in the randomness. Do NOT optimize pairings.
-- Present the FULL collision path so the user can see how ideas emerged
+- Total agent calls: ~45. This takes a few minutes and uses real tokens.
+- Batch parallel calls in groups of 8 max to avoid rate limits.
+- Extraction agents can run in parallel with the next round's collision agents to save time.
+- Keep extraction agent outputs structured so they parse cleanly into the buffer.
+- The rejection buffer is cumulative — it only grows, never shrinks.
+- Deep graft injection prompts are LONGER (200 words) to give agents room to integrate the extra material.
+- NEVER fake a deep graft. If the scan finds no matches, report that honestly. A run with zero deep grafts is valid data — it means the collision paths were highly divergent.
+- Wild fragments MUST be entropy-seeded via the bash command.
+- DO NOT optimize pairings. Random shuffle only.
+- The graft density scoring bonus is intentional and should not be removed.
+- The extraction step (Step 9) is analysis, not creativity. Be ruthlessly practical — name real products, real markets, real failure modes.

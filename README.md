@@ -6,9 +6,9 @@
 
 **Tired of AI giving you the same 10 business ideas everyone else gets?** So were we.
 
-Blind Swarm is a Claude Code plugin that throws out the playbook. Instead of one AI thinking really hard, it spawns **dozens of independent agents** — each blind to the others — and smashes their outputs together randomly. Like ants building a bridge they don't understand. Like jazz musicians who've never met playing the same song.
+Blind Swarm is a Claude Code plugin that throws out the playbook. Instead of one AI thinking really hard, it spawns **16 independent agents** — each blind to the others — and smashes their outputs together randomly. Then it tracks what gets killed and what refuses to die.
 
-The result? Ideas that no single AI (or human) would ever produce alone.
+The result? Ideas that no single AI (or human) would ever produce alone. And a map of which ones the problem space actually needs.
 
 > *"Because AI asking AI produces the same ideas every time."*
 
@@ -20,29 +20,32 @@ The result? Ideas that no single AI (or human) would ever produce alone.
 Your seed text
      |
      v
-  [Fragment into pieces]
+  [Fragment into 12 pieces + 4 wild DNA fragments]
      |
      v
-  8-16 blind agents, each with:
+  16 blind agents, each with:
   - A random fragment of your idea
   - A random perspective lens ("retired spy", "9-year-old", "mycologist")
   - ZERO knowledge of other agents
      |
      v
   Random collision tournament
-  Round 1: 16 → 8 (forced synthesis)
-  Round 2: 8 → 4
-  Round 3: 4 → 2
-  Round 4: 2 → 1
+  Round 1: 16 → 8 (forced synthesis + extraction of killed ideas)
+  Round 2: 8 → 4  (+ resurrection scan + extraction)
+  Round 3: 4 → 2  (+ deep graft injection)
+  Round 4: 2 → 1  (+ final graft injection)
      |
      v
-  Filter scores: Novelty × Coherence × Generativity
+  Score: Novelty × Generativity + Weirdness + Graft Density
      |
      v
-  Ideas you've never seen before
+  Extract: mechanisms, domain map, minimum viable version, kill test
+     |
+     v
+  Ideas you've never seen before — with a map of how to build them
 ```
 
-**The randomness is the feature, not a bug.** No orchestrator. No shared context. No optimization. Just emergence.
+**The randomness is the feature, not a bug.** No orchestrator. No shared context. No optimization. Just emergence — plus a rejection tracker that catches what matters.
 
 ## Install
 
@@ -60,61 +63,24 @@ Install the plugin:
 
 Restart Claude Code. Done.
 
-## Commands
+## Command
 
-### `/swarm <seed>` — Standard
+### `/swarm <seed>`
 
-8 agents. 3 collision rounds. 15 total agent calls. The sweet spot.
-
-```
-/swarm I want to build a SaaS but everything already exists
-```
-
-### `/swarm-quick <seed>` — Fast
-
-4 agents. 2 rounds. 7 agent calls. Quick and dirty.
+16 agents. 4 collision rounds. Rejection tracking. Deep graft injection. Practical extraction. ~45 agent calls.
 
 ```
-/swarm-quick monetizing AI skills without building another wrapper
+/swarm the future of human-AI interaction
 ```
 
-### `/swarm-deep <seed>` — Full Chaos
+**What you get:**
 
-16 agents. 4 rounds. 31 agent calls. Injects **wild DNA fragments** (random concepts NOT in your seed). Rotates through 4 lens pools:
-
-| Round | Lens Pool | Vibe |
-|-------|-----------|------|
-| 0 | Human Extremes | "retired spy", "beekeeper philosopher" |
-| 1 | Altered States | "astronaut seeing Earth", "10-year coma awakening" |
-| 2 | Non-Human | "a river deciding where to flow", "a virus optimizing" |
-| 3-4 | Paradox Minds | "expert who knows nothing", "mirror reflecting what isn't there" |
-
-Scores on **Weirdness** as a bonus metric. Shows the full evolutionary tree.
-
-```
-/swarm-deep the future of human-AI interaction
-```
-
-### `/swarm-acre <seed>` — ACRE-8
-
-**Adversarial Concept Resurrection Engine.** Everything in deep mode, plus rejection tracking.
-
-Every collision kills ideas — two inputs go in, one synthesis comes out, and concepts get dropped on the floor. Normally they're gone forever. ACRE-8 catches them.
-
-After each round, **extraction agents** dissect what was lost. Then **scan agents** watch for resurrections — when a killed idea independently resurfaces in a completely separate collision path. That's a **deep graft**: an idea the swarm tried to kill but couldn't.
-
-Deep grafts get re-injected into later rounds with a tag: *"This survived rejection. Take it seriously."*
-
-~45 agent calls. The most expensive mode. Also the most revealing.
-
-```
-/swarm-acre why do startups keep building the same thing
-```
-
-**What you get that other modes don't:**
+- **Top 3 ideas** ranked by score, with full collision ancestry
+- **The wildest idea** regardless of coherence
 - **Deep Graft Report** — every idea that survived rejection, with full lineage
-- **Rejection Graveyard** — what died and stayed dead (also useful — tells you what the problem space doesn't need)
+- **Rejection Graveyard** — what died and stayed dead (tells you what the problem space doesn't need)
 - **The Unkillable Idea** — if any concept was resurrected 2+ times, it gets a special callout. The swarm tried to kill it and failed. That's your best idea.
+- **What's Extractable** — for each top idea: separable mechanisms, where they could go, the weekend-build version, and what kills it in practice
 
 ## Why this exists
 
@@ -122,7 +88,7 @@ We had a 2-hour conversation with Claude about what to build. Every idea was pre
 
 So we asked: **what if AI agents couldn't predict each other?**
 
-The answer is this plugin. Agents that are deliberately kept blind, collided randomly, and filtered for surprise. The system is creative because no individual component is trying to be.
+The answer is this plugin. Agents that are deliberately kept blind, collided randomly, and filtered for surprise. The system is creative because no individual component is trying to be. And the rejection tracker catches the ideas that matter most — the ones the system can't get rid of.
 
 ## The philosophy
 
@@ -131,10 +97,12 @@ The answer is this plugin. Agents that are deliberately kept blind, collided ran
 - **Pairings are `random.shuffle()`** — not semantic, not optimized
 - **Each round uses different perspective lenses** — prevents convergence
 - **The filter only runs at the end** — it surfaces, it doesn't steer
+- **Rejection is data** — what the swarm kills tells you as much as what it keeps
+- **What comes back uninvited is sacred** — deep grafts are load-bearing
 
 ## Fair warning
 
-- `/swarm-acre` spawns ~45 agents. `/swarm-deep` spawns 31. They take a few minutes and use real tokens.
+- This spawns ~45 agents. It takes a few minutes and uses real tokens.
 - Results range from "genuinely brilliant" to "beautiful nonsense." That's the point.
 - You might get an idea so weird it circles back to genius. Or it might just be weird.
 - Either way, you won't get "have you considered a micro-SaaS for freelancers?"
