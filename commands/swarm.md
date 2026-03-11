@@ -343,19 +343,32 @@ Ranking formula: **(Novelty × Generativity) + Weirdness bonus + (Graft Density 
 
 The graft density bonus is intentional. Ideas shaped by deep grafts have been tested by rejection and survived. They earn extra weight.
 
-### Step 9: Extract
+### Step 9: Extract (SEED-ANCHORED)
+
+The swarm is wild on purpose. The extraction step is where the output gets translated back into the user's actual domain. **This is the bridge between creative chaos and practical utility.**
+
+First, determine the seed's domain from the original input:
+- If the seed is about software, apps, digital products, SaaS, APIs → domain is **digital product**
+- If the seed is about physical goods, manufacturing, hardware → domain is **physical product**
+- If the seed is about research, science, understanding → domain is **research**
+- If the seed is about art, expression, culture → domain is **creative**
+- If unclear or abstract → domain is **open** (no constraint)
 
 For each of the top 3 ideas, run an extraction pass. This is NOT a separate agent — YOU do this analysis:
 
+**IMPORTANT: Strip away the swarm's surface metaphors and translate the STRUCTURAL insight into the seed's domain.** If the swarm produced a bee hive monitoring system but the seed was about SaaS, the mechanism isn't "bee hive monitoring" — it's "biological decay signal as a proxy for engagement decay." If the swarm produced a ceramic residency but the seed was about software, the mechanism isn't "fire clay at 1,260°C" — it's "irreversible transformation as commitment device."
+
+The swarm's job was to find structural insights through wild collision. Your job is to carry those structures into the domain the user actually cares about. Every mechanism, every domain map entry, every MVT must be something the user could actually build or test in their world.
+
 For each top idea, produce:
 
-**MECHANISMS** — What are the separable moving parts? Each mechanism should be a concrete, reusable concept independent of the idea's specific framing.
+**MECHANISMS** — What are the separable structural insights? Strip the metaphor. Name the underlying pattern. Each mechanism should be domain-independent but your description should translate it into the seed's domain.
 
-**DOMAIN MAP** — Where could each mechanism actually apply? Name specific product categories, industries, or existing tools.
+**DOMAIN MAP** — Where could each mechanism apply within the seed's domain? Name specific products, tools, features, or experiments — not art installations or residencies (unless the seed is about art).
 
-**MINIMUM VIABLE VERSION** — What's the smallest, fastest version of this you could build or test? One weekend. One API. One experiment.
+**MINIMUM VIABLE VERSION** — What's the smallest, fastest version of this the user could build or test in their actual domain? One weekend. One API. One experiment. If the seed is about digital products, the MVT must be a digital product. If it's about SaaS, the MVT must be software. No physical residencies unless the seed asked for one.
 
-**KILL TEST** — What would make this idea die in practice? What's the most likely reason it fails? Be honest.
+**KILL TEST** — What would make this idea die in practice in the user's domain? Be specific to their world, not to the swarm's metaphorical framing.
 
 ### Step 10: Present results
 
@@ -432,7 +445,7 @@ If any concept was resurrected 2+ times (a double graft or higher):
 
 If no double grafts exist, skip this section.
 
-#### Extraction:
+#### Extraction (anchored to seed's domain):
 
 11. **WHAT'S EXTRACTABLE**
 
@@ -441,20 +454,24 @@ For each top 3 idea:
 ```
 ┌─────────────────────────────────────────────────────────┐
 │ IDEA: {name}                                            │
+│ STRUCTURAL INSIGHT: {the pattern underneath, stripped    │
+│ of the swarm's metaphorical surface}                    │
 ├─────────────────────────────────────────────────────────┤
 │ MECHANISMS:                                             │
-│ - {mechanism 1}: {what it does}                         │
-│ - {mechanism 2}: {what it does}                         │
+│ - {mechanism 1}: {what it does, in the seed's domain}   │
+│ - {mechanism 2}: {what it does, in the seed's domain}   │
 │                                                         │
 │ DOMAIN MAP:                                             │
-│ - {mechanism 1} → {where it could go}                  │
-│ - {mechanism 2} → {where it could go}                  │
+│ - {mechanism 1} → {specific products/tools/features}   │
+│ - {mechanism 2} → {specific products/tools/features}   │
 │                                                         │
 │ MINIMUM VIABLE VERSION:                                 │
-│ {1-3 sentences: the weekend build}                      │
+│ {1-3 sentences: buildable in the seed's domain.         │
+│  If the seed is about software, this is software.       │
+│  If the seed is about SaaS, this is a SaaS feature.}   │
 │                                                         │
 │ KILL TEST:                                              │
-│ {1-2 sentences: what kills this in practice}            │
+│ {1-2 sentences: what kills this in the user's world}    │
 └─────────────────────────────────────────────────────────┘
 ```
 
